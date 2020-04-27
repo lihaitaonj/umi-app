@@ -3,7 +3,7 @@
  * @Author: lsg
  * @Date: 2020-04-24 15:17:06
  * @LastEditors: lsg
- * @LastEditTime: 2020-04-26 11:39:55
+ * @LastEditTime: 2020-04-27 16:33:07
  * @FilePath: \umi-app\src\layouts\Header.js
  */
 import React from 'react';
@@ -33,6 +33,9 @@ const Header = ({ location }) => {
       >
         <MenuItem key="/">
           <Link to="/">首页</Link>
+        </MenuItem>
+        <MenuItem key="/users">
+          <Link to="/users">用户</Link>
         </MenuItem>
         {/* <MenuItem>首页</MenuItem>
         <MenuItem>首页</MenuItem> */}

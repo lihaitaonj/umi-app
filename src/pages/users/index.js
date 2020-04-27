@@ -5,8 +5,13 @@ import React from 'react';
 import { Button } from 'antd';
 import { Content, Tool } from '@/components/Layout';
 import Table from '@/components/Table';
+import { connect } from 'dva';
+import UserModal from './components/UserModal';
 
-const index = () => {
+// import { fetch } from './services/users';
+
+const index = ({list}) => {
+  // fetch().then(res => console.log(res));
   const columns = [
     {
       title: '用户名',
@@ -25,15 +30,15 @@ const index = () => {
       dataIndex: 'type',
       key: 'type',
       width: '25%',
-      // render: text => <span>{text === '0' ? '管理员' : '普通用户'}</span>,
+      render: text => <span>{text === '0' ? '管理员' : '普通用户'}</span>,
     },
     {
       title: '操作',
       key: 'operation',
       render: (text, record) => (
         <div>
-            {/* <a>编辑</a>
-            <a>删除</a> */}
+            <a>编辑</a>
+            <a>删除</a>
         </div>
       ),
     },
@@ -42,9 +47,10 @@ const index = () => {
     <Content>
       <Tool>
         <Button type="primary" >添加用户</Button>
+        <UserModal></UserModal>
       </Tool>
-      <Table columns={columns}></Table>
+      <Table columns={columns} dataSource={list} rowKey={(list, index) => list.id}></Table>
     </Content>
   )
 }
-export default index;
+export default connect(({ users }) => ({ ...users }))(index);
