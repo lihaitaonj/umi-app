@@ -12,6 +12,8 @@ $yarn/npm add node-sass sass-loader --save-dev
 
 $yarn add echarts echarts-for-react
 
+$npm install --save jwt-decode
+
 # dva
 
 <!-- {

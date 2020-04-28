@@ -10,11 +10,27 @@ const formItemLayout = {
   wrapperCol: {span: 14}
 }
 
+//克隆子元素button 并且添加事件 HOC: higher order components
+const widthClick = (element, handleClick = () => {}) => {
+  return <element.type {...element.props} onClick={handleClick} />
+}
+
 class userModal extends Component {
+  state = {
+    visible: false
+  }
+  handleOpenClick = () => {
+    this.setState({
+      visible: true
+    })
+  }
   render() {
+    const {visible} = this.state;
+    const {children} = this.props;
     return (
       <>
-        <Modal title="添加用户" visible={true}>
+        {widthClick(children, this.handleOpenClick)}
+        <Modal title="添加用户" visible={visible} centered={true} maskClosable={true}>
           <Form>
             <FormItem label="用户名" {...formItemLayout}>
               <Input placeholder="请输入用户名" />
