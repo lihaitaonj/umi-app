@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Form, Input, Radio } from 'antd';
+import { widthClick } from '@/utils/hoc';
+// import { connect } from 'dva';
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
@@ -10,39 +12,88 @@ const formItemLayout = {
   wrapperCol: {span: 14}
 }
 
-//克隆子元素button 并且添加事件 HOC: higher order components
-const widthClick = (element, handleClick = () => {}) => {
-  return <element.type {...element.props} onClick={handleClick} />
-}
-
 class userModal extends Component {
   state = {
-    visible: false
-  }
+    visible: false,
+  };
   handleOpenClick = () => {
     this.setState({
-      visible: true
+      visible: true,
+    });
+  };
+  handleCancel = () => {
+    this.setState({
+      visible: false,
+    });
+  };
+  handleOk = () => {
+    //form 表单校验
+    this.props.form.validateFields((err, values) => {
+      if(!err) {
+
+        //请求 save
+        this.props.onOk(values).then(res => {
+          if (res.state === 'success') {
+            //关闭弹窗
+            this.handleCancel();
+          }
+        });
+      }
     })
   }
   render() {
-    const {visible} = this.state;
-    const {children} = this.props;
+    const { visible } = this.state;
+    const { children, form, addLoading, title, record } = this.props;
     return (
       <>
         {widthClick(children, this.handleOpenClick)}
-        <Modal title="添加用户" visible={visible} centered={true} maskClosable={true}>
+        <Modal
+          title={title}
+          visible={visible}
+          centered={true}
+          maskClosable={false}
+          onCancel={this.handleCancel}
+          onOk={this.handleOk}
+          confirmLoading={addLoading}
+        >
           <Form>
             <FormItem label="用户名" {...formItemLayout}>
-              <Input placeholder="请输入用户名" />
+              {form.getFieldDecorator('username', {
+                rules: [
+                  {
+                    required: true,
+                    message: '用户名不能为空',
+                  },
+                ],
+                initialValue: record.username,
+              })(<Input placeholder="请输入用户名" />)}
             </FormItem>
             <FormItem label="姓名" {...formItemLayout}>
-              <Input placeholder="请输入姓名" />
+              {form.getFieldDecorator('nickname', {
+                rules: [
+                  {
+                    required: true,
+                    message: '姓名不能为空',
+                  },
+                ],
+                initialValue: record.nickname,
+              })(<Input placeholder="请输入姓名" />)}
             </FormItem>
             <FormItem label="用户类型" {...formItemLayout}>
-              <RadioGroup>
-                <Radio value={'0'}>管理员</Radio>
-                <Radio value={'1'}>普通用户</Radio>
-              </RadioGroup>
+              {form.getFieldDecorator('type', {
+                rules: [
+                  {
+                    required: true,
+                    message: '用户类型不能为空',
+                  },
+                ],
+                initialValue: record.type || '1',
+              })(
+                <RadioGroup>
+                  <Radio value={'0'}>管理员</Radio>
+                  <Radio value={'1'}>普通用户</Radio>
+                </RadioGroup>,
+              )}
             </FormItem>
           </Form>
         </Modal>
@@ -51,4 +102,9 @@ class userModal extends Component {
   }
 }
 
-export default userModal;
+userModal.defaultProps = {
+  title: '添加用户',
+  record: {username: '', nickname: '', type: '1'},
+};
+
+export default Form.create()(userModal);
