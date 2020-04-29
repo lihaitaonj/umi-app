@@ -3,23 +3,26 @@
  * @Author: lsg
  * @Date: 2020-04-24 15:17:06
  * @LastEditors: lsg
- * @LastEditTime: 2020-04-29 10:28:06
+ * @LastEditTime: 2020-04-29 16:44:09
  * @FilePath: \umi-app\src\layouts\Header.js
  */
 import React from 'react';
 import { Menu, Dropdown, Icon } from 'antd';
 import Link from 'umi/link';
 import withRouter from 'umi/withRouter';
+import { router } from 'umi';
 
 const MenuItem = Menu.Item;
 
 const Header = ({ location }) => {
+  const loginOut = () => {
+    localStorage.clear();
+    router.push("/login");
+  }
   const menu = (
     <Menu>
       <MenuItem>
-        <span>
-          <a href="https://www.baidu.com">退出</a>
-        </span>
+        <span onClick={loginOut}>退出</span>
       </MenuItem>
     </Menu>
   );
@@ -45,10 +48,10 @@ const Header = ({ location }) => {
       </Menu>
       <div className="header-right">
         <Dropdown overlay={menu}>
-          <a className="ant-dropdown-link" href="https://www.baidu.com">
+          <span style={{color: "#999"}}>
             <Icon type="user" style={{ marginRight: 3 }} />
-            admin
-          </a>
+            {localStorage.nickname}
+          </span>
         </Dropdown>
       </div>
     </div>

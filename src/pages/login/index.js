@@ -4,6 +4,7 @@
  */
 import React from 'react';
 import router from 'umi/router'
+import jwt_decode from 'jwt-decode';
 // import { login } from './services/login';
 import { Layout, Icon, Form, Input, Button, message } from 'antd';
 import {connect} from 'dva';
@@ -26,8 +27,8 @@ const index = ({ form, dispatch, loading }) => {
           payload: values
         }).then(res => {
           if (res && res.state === 'suc') {
-            // const token = jwt_decode(res.token);
-            const token = {id: "admin", nickname: "admin", username: "admin", type: '0'};
+            const token = jwt_decode(res.token);
+            // const token = {id: "admin", nickname: "admin", username: "admin", type: '0'};
             const { id, nickname, username, type } = token;
             localStorage.setItem('username', username);
             localStorage.setItem('nickname', nickname);
@@ -80,7 +81,12 @@ const index = ({ form, dispatch, loading }) => {
               )}
             </FormItem>
             <FormItem>
-              <Button onClick={handleSubmit} type="primary" style={{ width: '100%' }}>
+              <Button
+                onClick={handleSubmit}
+                type="primary"
+                style={{ width: '100%' }}
+                loading={loading}
+              >
                 Login
               </Button>
             </FormItem>

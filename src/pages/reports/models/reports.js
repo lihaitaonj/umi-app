@@ -20,5 +20,8 @@ export default {
         yield put({ type: 'setData', payload: { allUsersList: [] } });
       }
     },
+    *add({payload}, {call, put}) {
+      return yield call(reportsServices.add, payload);
+    }
   },
 };

@@ -3,7 +3,7 @@
  * @Author: lsg
  * @Date: 2020-04-28 10:33:07
  * @LastEditors: lsg
- * @LastEditTime: 2020-04-29 16:22:22
+ * @LastEditTime: 2020-04-29 16:38:17
  * @FilePath: \umi-app\src\pages\login\models\login.js
  */
 import * as loginServices from '../services/login'
@@ -19,7 +19,7 @@ export default {
     }
   },
   effects: {
-    *fetch({payload}, {call}) {
+    *login({payload}, {call}) {
       return yield call(loginServices.login, payload);
     }
   }
