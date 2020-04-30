@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Form, Input, Radio } from 'antd';
+import { Modal, Form, Input, Radio, message } from 'antd';
 import { widthClick } from '@/utils/hoc';
 // import { connect } from 'dva';
 
@@ -33,9 +33,11 @@ class userModal extends Component {
 
         //请求 save
         this.props.onOk(values).then(res => {
-          if (res.state === 'success') {
+          if (res && res.state === 'success') {
             //关闭弹窗
             this.handleCancel();
+          } else {
+            message.error(res ? res.msg : "添加用户失败！");
           }
         });
       }

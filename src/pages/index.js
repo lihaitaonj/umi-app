@@ -1,5 +1,8 @@
 /**
  * title: 首页
+ * Routes:
+ *   - ./src/routes/PrivateRoute.js
+ * authority: ["admin","user"]
  */
 import ReactEcharts from 'echarts-for-react';
 import { Card, Col, Row } from 'antd'

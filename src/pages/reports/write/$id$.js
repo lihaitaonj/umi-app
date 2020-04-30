@@ -1,5 +1,8 @@
 /*
  * title: 写周报
+ * Routes:
+ *   - ./src/routes/PrivateRoute.js
+ * authority: ["admin", "user"]
  */
 import React, { Component } from 'react';
 import { Input, Select, Button, Form, message } from 'antd';
@@ -10,9 +13,10 @@ import { router } from 'umi';
 
 const FormItem = Form.Item;
 
-class index extends Component {
+class $id$ extends Component {
   constructor(props) {
     super(props);
+    this.id = this.props.match.params.id;
     this.state = {
       editorContent: null,
       editorCheck: true,
@@ -21,10 +25,26 @@ class index extends Component {
   }
 
   componentDidMount() {
-    this.initEditor();
+    if(this.id) {
+      this.getDatas().then(() => {
+        const {content} = this.props.info;
+        this.setState({
+          editorContent: content
+        })
+        this.initEditor();
+      });
+    } else {
+      this.initEditor();
+    }
+    // this.initEditor();
     this.getAllUsers();
   }
-
+  getDatas() {
+    return this.props.dispatch({
+      type: "reports/fetchInfo",
+      payload: this.id
+    })
+  }
   getAllUsers() {
     // console.log(this.props.dispatch)
     this.props
@@ -72,8 +92,8 @@ class index extends Component {
         //校验富文本
         if(editorCheck && editorContent) {
           this.props.dispatch({
-            type: "reports/add",
-            payload: {...values, content: editorContent}
+            type: this.id ? "reports/update" : "reports/add",
+            payload: {...values, content: editorContent, id: this.id}
           }).then(res => {
             if(res && res.state === "success") {
               message.success(res.msg || "周报提交成功")
@@ -98,6 +118,7 @@ class index extends Component {
   render() {
     const { form, loading } = this.props;
     const { editorCheck } = this.state;
+    const { title, receiverName, content } = this.props.info;
     return (
       <Content style={{ textAlign: 'left' }}>
         <Form>
@@ -109,6 +130,7 @@ class index extends Component {
                   message: '周报标题不能为空',
                 },
               ],
+              initialValue: title,
             })(<Input placeholder="请输入周报标题" />)}
           </FormItem>
           <FormItem label="接收人">
@@ -119,10 +141,12 @@ class index extends Component {
                   message: '接收人不能为空',
                 },
               ],
+              initialValue: receiverName,
             })(this.renderUsers())}
           </FormItem>
           <FormItem label="内容" required>
-            <div ref="editorRef" style={!editorCheck ? { border: '1px solid red' } : {}} />
+            <div ref="editorRef" style={!editorCheck ? { border: '1px solid red' } : {}}
+            dangerouslySetInnerHTML={{__html: content}}/>
             {!editorCheck ? <p style={{ color: 'red' }}>内容不能为空</p> : ''}
           </FormItem>
           <FormItem>
@@ -136,4 +160,7 @@ class index extends Component {
     );
   }
 }
-export default connect(({ reports, loading }) => ({ ...reports, loading: loading.effects['reports/add'] }))(Form.create()(index));
+export default connect(({ reports, loading }) => ({
+  ...reports,
+  loading: loading.effects['reports/add'],
+}))(Form.create()($id$));

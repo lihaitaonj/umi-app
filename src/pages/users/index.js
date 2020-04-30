@@ -1,5 +1,8 @@
 /*
  * title: 用户
+ * Routes:
+ *   - ./src/routes/PrivateRoute.js
+ * authority: ["admin"]
  */
 import React from 'react';
 import { Button, message, Popconfirm } from 'antd';
@@ -38,10 +41,10 @@ const index = ({list, dispatch, loading, addLoading, page, pageSize, total}) => 
       render: (text, record) => (
         <div>
           <UserModal title="编辑用户" record={record} onOk={values => handleEdit(record.id, values)}>
-            <a>编辑</a>
+            <>编辑</>
           </UserModal>
           <Popconfirm title="确定要删除该用户吗？" onConfirm={() => handleRemove(record.id)}>
-            <a>删除</a>
+            <>删除</>
           </Popconfirm>
         </div>
       ),

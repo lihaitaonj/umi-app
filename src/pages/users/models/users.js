@@ -1,11 +1,3 @@
-/*
- * @Descripttion:
- * @Author: lsg
- * @Date: 2020-04-27 16:45:25
- * @LastEditors: lsg
- * @LastEditTime: 2020-04-28 16:58:40
- * @FilePath: \umi-app\src\pages\users\models\users.js
- */
 import * as usersServices from '../services/users';
 export default {
   namespace: 'users',
